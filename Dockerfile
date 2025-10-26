@@ -13,8 +13,9 @@ RUN apt-get update && apt-get install -y \
     libwebp-dev \
     pkg-config \
     libzip-dev \
+    libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
+    && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
