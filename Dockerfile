@@ -4,8 +4,6 @@ FROM php:8.2-apache
 RUN apt-get update && apt-get install -y \
     libonig-dev \
     libzip-dev \
-    zip \
-    unzip \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
@@ -19,13 +17,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 
-# Laravel setup
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
+
+# Laravel setup
 RUN php artisan key:generate
 RUN php artisan migrate --force || true
 RUN php artisan storage:link
 
-# Permissions
+# Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
