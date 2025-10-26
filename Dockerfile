@@ -24,7 +24,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application
+# Copy application code
 COPY . .
 
 # Install PHP dependencies
@@ -41,5 +41,5 @@ RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /et
 # Expose port 80
 EXPOSE 80
 
-# Start Apache and run Laravel commands at container startup
-CMD ["sh", "-c", "php artisan migrate --force && php artisan storage:link && apache2-foreground"]
+# Run Laravel migrations and storage link before starting Apache
+CMD ["sh", "-c", "php artisan config:cache && php artisan migrate --force && php artisan storage:link && apache2-foreground"]
