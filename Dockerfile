@@ -1,3 +1,4 @@
+# Use PHP 8.2 with Apache
 FROM php:8.2-apache
 
 # Install system dependencies
@@ -19,6 +20,7 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Set working directory
 WORKDIR /var/www/html
 
 # Copy application
@@ -27,13 +29,12 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Laravel setup
-RUN php artisan key:generate
-RUN php artisan migrate --force || true
-RUN php artisan storage:link
-
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Expose port 80
 EXPOSE 80
-CMD ["apache2-foreground"]
+
+# Start Apache and run Laravel commands at container startup
+CMD ["sh", "-c", "php artisan migrate --force && php artisan storage:link && apache2-foreground"]
