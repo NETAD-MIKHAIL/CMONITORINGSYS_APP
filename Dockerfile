@@ -31,7 +31,11 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Set Apache DocumentRoot to Laravel's public folder
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf \
+    && a2enmod rewrite
 
 # Expose port 80
 EXPOSE 80
