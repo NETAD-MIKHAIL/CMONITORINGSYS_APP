@@ -1,10 +1,11 @@
 services:
   - type: web
     name: cmonitoringsys-app
-    plan: free
     env: docker
-    buildCommand: ""
-    startCommand: ""
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    branch: main
     envVars:
       - key: APP_ENV
         value: production
