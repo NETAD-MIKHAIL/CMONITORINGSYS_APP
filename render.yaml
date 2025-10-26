@@ -2,6 +2,9 @@ services:
   - type: web
     name: cmonitoringsys-app
     plan: free
+    env: docker
+    buildCommand: ""
+    startCommand: ""
     envVars:
       - key: APP_ENV
         value: production
